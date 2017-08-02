@@ -15,12 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shop-common-styles.html">
 <link rel="import" href="shop-image.html">
 <link rel="import" href="shop-select.html">
-
-
-
 <link rel="import" href="ing-transaction-item.html">
-
-
 <dom-module id="ing-transactions">
     <template>
         <style include="shop-common-styles shop-button shop-form-styles">
@@ -36,6 +31,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         .subtotal {
             margin: 0 64px 0 24px;
+        }
+
+        .tdetail{
+            width: 50%;
+            margin-left: 2em;
         }
 
         @media (max-width: 767px) {
@@ -57,11 +57,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <h1 id="dashboardHeading">Transactions</h1>
             <div class="circle">2</div>
             <div class="list">
-                <dom-repeat items="[[cart]]" as="entry">
-                    <template>
-                        <ing-transaction-item entry="[[entry]]"></ing-transaction-item>
-                    </template>
-                </dom-repeat>
+                <table>
+                    <thead>
+                        <td>Date</td>
+                        <td class="tdetail">Detail</td>
+                        <td>Amount</td>
+                    </thead>
+                    <tr>
+                        <td>28-Mar-2017</td>
+                        <td>POS Dominos</td>
+                        <td>$ 12.85</td>
+                    </tr>
+                    <tr>
+                        <td>23-Mar-2017</td>
+                        <td>POS Lidl</td>
+                        <td>$ 6.23</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </template>
@@ -81,7 +93,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 visible: {
                     type: Boolean,
-                    value: false
+                    value: true
                 },
 
                 offline: {
@@ -96,106 +108,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         }
 
-        static get observers() {
-            return [
-                '_itemChanged(item, visible)'
-            ]
-        }
 
 
         constructor(props) {
-          super(props);
-        
-          console.log('ing-trasnsaction constructor');
-          console.dir(this.cart);
+            super(props);
+
+            console.log('ing-trasnsaction constructor');
+            console.dir(this.cart);
         }
 
 
         ready() {
             super.ready();
-             console.log('ing-trasnsaction ready');
-          console.dir(this);
+            console.log('ing-trasnsaction ready');
+            console.dir(this);
 
-          this.cart = [
-  {
-    "item": {
-      "date": "24-Mar-2017",
-      "detail": "POS Dominos",
-      "amount": 84.85,
-    },
-  },
-  {
-    "item": {
-      "date": "28-Mar-2017",
-      "detail": "POS Lidl",
-      "amount": 23.19,
-    },
-  }
-];
-          }
-
-        _itemChanged(item, visible) {
-            console.log('item-changed');
-            if (visible) {
-                this._itemChangeDebouncer = Polymer.Debouncer.debounce(this._itemChangeDebouncer,
-                    Polymer.Async.microTask, () => {
-                        // The item description contains escaped HTML (e.g. "&lt;br&gt;"), so we need to
-                        // unescape it ("<br>") and set it as innerHTML.
-                        let text = item ? item.description : '';
-                        this.$.desc.innerHTML = this._unescapeText(text);
-
-                        // Reset the select menus.
-                        this.$.quantitySelect.value = '1';
-                        this.$.sizeSelect.value = 'M';
-
-                        this.dispatchEvent(new CustomEvent('change-section', {
-                            bubbles: true,
-                            composed: true,
-                            detail: {
-                                category: item ? item.category : '',
-                                title: item ? item.title : ''
-                            }
-                        }));
-                    })
-            }
+            this.cart = [{
+                    "item": {
+                        "date": "24-Mar-2017",
+                        "detail": "POS Dominos",
+                        "amount": 84.85,
+                    },
+                },
+                {
+                    "item": {
+                        "date": "28-Mar-2017",
+                        "detail": "POS Lidl",
+                        "amount": 23.19,
+                    },
+                }
+            ];
         }
 
-        _unescapeText(text) {
-            let elem = document.createElement('textarea');
-            elem.innerHTML = text;
-            return elem.textContent;
-        }
 
         _formatPrice(price) {
             return price ? '$' + price.toFixed(2) : '';
         }
 
-        _addToCart() {
-            // This event will be handled by shop-app.
-            this.dispatchEvent(new CustomEvent('add-cart-item', {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    item: this.item,
-                    quantity: parseInt(this.$.quantitySelect.value, 10),
-                    size: this.$.sizeSelect.value
-                }
-            }));
-        }
 
-        _isDefined(item) {
-            return item != null;
-        }
-
-        _tryReconnect() {
-            this.$.categoryData.refresh();
-        }
-
-        _offlineChanged(offline) {
-            if (!offline) {
-                this._tryReconnect();
-            }
-        }
 
     }
 
