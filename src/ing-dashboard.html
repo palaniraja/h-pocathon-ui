@@ -15,8 +15,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shop-common-styles.html">
 <link rel="import" href="shop-image.html">
 <link rel="import" href="shop-select.html">
+<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
 <dom-module id="ing-dashboard">
     <template>
+
+    <app-localstorage-document key="ing-ac-data" id="dashboardData" data={{acData}} ></app-localstorage-document>
         
         <style include="shop-common-styles shop-button shop-form-styles shop-input shop-select shop-checkbox">
         </style>
@@ -31,10 +35,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
         <!-- <div id="dashboardCard" class="card"> -->
+
+
+    <template is="dom-repeat" items="{{acData.accountsummary}}">
         <div id="dashboardCard" class="card">
-            <h1 id="dashboardHeading">Dashboard123</h1>
-            <div class="circle">1</div>
+            <h1 id="dashboardHeading">{{item.accountype}}</h1>
+            <div class="circle">[[index]]</div>
         </div>
+    </template>
+        
+
+        
 
 
         <!--
@@ -47,7 +58,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         on-try-reconnect="_tryReconnect"></shop-network-warning> -->
     </template>
     <script>
-    class IngDashboard extends Polymer.Element {
+    class IngDashboard extends Polymer.mixinBehaviors([Polymer.AppStorageBehavior], Polymer.Element) {
 
         static get is() { return 'ing-dashboard'; }
 
@@ -70,78 +81,97 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     observer: '_offlineChanged'
                 },
 
-                failure: Boolean
+                failure: Boolean,
+
+                acData: Object
 
             }
         }
 
-        static get observers() {
-            return [
-                '_itemChanged(item, visible)'
-            ]
+        // static get observers() {
+        //     return [
+        //         '_itemChanged(item, visible)'
+        //     ]
+        // }
+
+
+        ready(){
+            super.ready();
+
+            
+
+            console.log(this.$.dashboardData);
+
+            this.acData  = window.localStorage.getItem('ing-ac-data'); //couldn't get the value out of app-storage promise. hence dirty trick
+
+            console.log(s);
+
+            
+            // console.log('ready');
+            // console.log(this.acData);
         }
 
-        _itemChanged(item, visible) {
-            if (visible) {
-                this._itemChangeDebouncer = Polymer.Debouncer.debounce(this._itemChangeDebouncer,
-                    Polymer.Async.microTask, () => {
-                        // The item description contains escaped HTML (e.g. "&lt;br&gt;"), so we need to
-                        // unescape it ("<br>") and set it as innerHTML.
-                        let text = item ? item.description : '';
-                        this.$.desc.innerHTML = this._unescapeText(text);
+        // _itemChanged(item, visible) {
+        //     if (visible) {
+        //         this._itemChangeDebouncer = Polymer.Debouncer.debounce(this._itemChangeDebouncer,
+        //             Polymer.Async.microTask, () => {
+        //                 // The item description contains escaped HTML (e.g. "&lt;br&gt;"), so we need to
+        //                 // unescape it ("<br>") and set it as innerHTML.
+        //                 let text = item ? item.description : '';
+        //                 this.$.desc.innerHTML = this._unescapeText(text);
 
-                        // Reset the select menus.
-                        this.$.quantitySelect.value = '1';
-                        this.$.sizeSelect.value = 'M';
+        //                 // Reset the select menus.
+        //                 this.$.quantitySelect.value = '1';
+        //                 this.$.sizeSelect.value = 'M';
 
-                        this.dispatchEvent(new CustomEvent('change-section', {
-                            bubbles: true,
-                            composed: true,
-                            detail: {
-                                category: item ? item.category : '',
-                                title: item ? item.title : ''
-                            }
-                        }));
-                    })
-            }
-        }
+        //                 this.dispatchEvent(new CustomEvent('change-section', {
+        //                     bubbles: true,
+        //                     composed: true,
+        //                     detail: {
+        //                         category: item ? item.category : '',
+        //                         title: item ? item.title : ''
+        //                     }
+        //                 }));
+        //             })
+        //     }
+        // }
 
-        _unescapeText(text) {
-            let elem = document.createElement('textarea');
-            elem.innerHTML = text;
-            return elem.textContent;
-        }
+        // _unescapeText(text) {
+        //     let elem = document.createElement('textarea');
+        //     elem.innerHTML = text;
+        //     return elem.textContent;
+        // }
 
-        _formatPrice(price) {
-            return price ? '$' + price.toFixed(2) : '';
-        }
+        // _formatPrice(price) {
+        //     return price ? '$' + price.toFixed(2) : '';
+        // }
 
-        _addToCart() {
-            // This event will be handled by shop-app.
-            this.dispatchEvent(new CustomEvent('add-cart-item', {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    item: this.item,
-                    quantity: parseInt(this.$.quantitySelect.value, 10),
-                    size: this.$.sizeSelect.value
-                }
-            }));
-        }
+        // _addToCart() {
+        //     // This event will be handled by shop-app.
+        //     this.dispatchEvent(new CustomEvent('add-cart-item', {
+        //         bubbles: true,
+        //         composed: true,
+        //         detail: {
+        //             item: this.item,
+        //             quantity: parseInt(this.$.quantitySelect.value, 10),
+        //             size: this.$.sizeSelect.value
+        //         }
+        //     }));
+        // }
 
-        _isDefined(item) {
-            return item != null;
-        }
+        // _isDefined(item) {
+        //     return item != null;
+        // }
 
-        _tryReconnect() {
-            this.$.categoryData.refresh();
-        }
+        // _tryReconnect() {
+        //     this.$.categoryData.refresh();
+        // }
 
-        _offlineChanged(offline) {
-            if (!offline) {
-                this._tryReconnect();
-            }
-        }
+        // _offlineChanged(offline) {
+        //     if (!offline) {
+        //         this._tryReconnect();
+        //     }
+        // }
 
     }
 

@@ -31,6 +31,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shop-select.html">
 <link rel="import" href="shop-checkbox.html">
 
+<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
+<!-- Intl polyfill -->
+    <script src="../bower_components/intl/dist/Intl.min.js"></script>
+    <script src="../bower_components/intl/locale-data/jsonp/en.js"></script>
+    <script src="../bower_components/intl/locale-data/jsonp/fr.js"></script>
+
+
+
 
 <dom-module id="ing-home">
     <template>
@@ -141,13 +151,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
       </template>
     </dom-repeat> -->
+
+     
+     <div>{{localize('pempty', 'empty', 'empty')}}</div>
+
+    <app-localstorage-document key="ing-ac-data" data="{{acData}}"></app-localstorage-document>
         <div id="loginCard" class="card">
             <iron-form id="form">
                 <h1 id="loginHeading">Login</h1>
                 <form action="http://httpbin.org/post" method="post">
                     <!-- <paper-input label="First Name" name="firstname" id="firstname" auto-validate pattern="[a-zA-Z]*" required error-message="{{localize('hello', 'sname', 'superman', 'name', 'kent clark')}}"></paper-input> -->
-                    <paper-input name="username" placeholder="username"></paper-input>
-                    <paper-input name="password" placeholder="password" type="password"></paper-input>
+                    <paper-input name="username" placeholder="username" ></paper-input>
+                    <paper-input name="password" placeholder="password" type="password" ></paper-input>
                     <paper-button on-tap="_submit" raised>Login</paper-button>
                     <!-- <button on-click="_submit">Submit</button> -->
                 </form>
@@ -157,7 +172,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
     </template>
     <script>
-    class IngHome extends Polymer.Element {
+    class IngHome extends Polymer.mixinBehaviors([Polymer.AppLocalizeBehavior], Polymer.Element) {
 
         static get is() { return 'ing-home'; }
 
@@ -171,6 +186,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 visible: {
                     type: Boolean,
                     observer: '_visibleChanged'
+                },
+
+                language: {
+                  value: 'en',
+                  type: String
+                },
+
+
+                resources: {
+                  type: Object,
+                  value: function() {
+                    return {
+                       'en': { 
+                              'uempty': 'username should not be {empty}',
+                              'pempty': 'password should not be {empty}' 
+
+                            },
+                        'fr': { 
+                              'uempty': 'FR_Nom d utilisateur should not be {empty}',
+                              'pempty': 'FR_mot de passeshould not be {empty}' 
+                            }
+                    };
+                  }
                 }
 
             }
@@ -200,15 +238,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         handleResponse(data) {
             
             let res = data.detail.response;
-
+            this.acData = res;
             console.dir(res);
 
 
             if(res.status == 'success'){
-
                window.history.pushState({}, null, '/dashboard');
-              window.dispatchEvent(new CustomEvent('location-changed'));
-
+               window.dispatchEvent(new CustomEvent('location-changed'));
             }
             else{
               alert('Invalid credentials');
