@@ -18,7 +18,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-<link rel="import" href="shop-cart-item.html">
+<!-- <link rel="import" href="shop-cart-item.html"> -->
+<link rel="import" href="ing-transaction-item.html">
 
 
 <dom-module id="ing-transactions">
@@ -59,7 +60,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div class="list">
                 <dom-repeat items="[[cart]]" as="entry">
                     <template>
-                        <shop-cart-item entry="[[entry]]"></shop-cart-item>
+                        <ing-transaction-item entry="[[entry]]"></ing-transaction-item>
                     </template>
                 </dom-repeat>
             </div>

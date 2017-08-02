@@ -15,7 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shop-image.html">
 <link rel="import" href="shop-select.html">
 
-<dom-module id="shop-cart-item">
+<dom-module id="ing-transaction-item">
 
   <template strip-whitespace>
 
@@ -176,7 +176,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="detail">
         <div class="quantity">
           <shop-select>
-            <label prefix>Qty:</label>
+            <label prefix>HHHH:</label>
             <select id="quantitySelect" aria-label="Change quantity" value="[[entry.quantity]]"
                 on-change="_quantityChange">
               <option value="1">1</option>
@@ -209,9 +209,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
 
-    class ShopCartItem extends Polymer.Element {
+    class IngTransactionItem extends Polymer.Element {
 
-      static get is() { return 'shop-cart-item'; }
+      static get is() { return 'ing-transaction-item'; }
 
       static get properties() { return {
 
@@ -242,7 +242,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     }
 
-    customElements.define(ShopCartItem.is, ShopCartItem);
+    customElements.define(IngTransactionItem.is, IngTransactionItem);
 
   </script>
 
