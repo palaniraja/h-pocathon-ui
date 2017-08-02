@@ -193,12 +193,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         _submit() {
 
             const form = this.$['form'];
-            alert(JSON.stringify(form.serializeForm()));
+            // alert(JSON.stringify(form.serializeForm()));
             this.$.requestRepos.generateRequest();
         }
 
         handleResponse(data) {
-            console.dir(data.detail.response);
+            
+            let res = data.detail.response;
+
+            console.dir(res);
+
+
+            if(res.status == 'success'){
+
+               window.history.pushState({}, null, '/dashboard');
+              window.dispatchEvent(new CustomEvent('location-changed'));
+
+            }
+            else{
+              alert('Invalid credentials');
+            }
+
+           
         }
 
     }
