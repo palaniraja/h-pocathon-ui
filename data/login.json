@@ -1,0 +1,9 @@
+{
+    "accounts":[
+        {
+            "id":1234,
+            "balance": 3000
+            "type": "adult"
+        }
+    ]
+}
