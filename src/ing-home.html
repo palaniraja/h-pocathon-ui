@@ -139,7 +139,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
       </template>
     </dom-repeat> -->
-        <div id="loginCard">
+        <div id="loginCard" class="card">
             <iron-form id="form">
                 <h1 id="loginHeading">Login</h1>
                 <form action="http://httpbin.org/post" method="post">
@@ -150,7 +150,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <!-- <button on-click="_submit">Submit</button> -->
                 </form>
             </iron-form>
-            <iron-ajax id="requestRepos" url="https://api.github.com/users/burczu/repos" params='{"type":"all"}' handle-as="json" on-response="handleResponse">
+            <iron-ajax id="requestRepos" url="data/login.json" handle-as="json" on-response="handleResponse">
             </iron-ajax>
         </div>
     </template>
