@@ -1,0 +1,133 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<!--
+`<account card>` is Description
+
+@element account cards
+-->
+<dom-module id="ing-account-element">
+    <template>
+        <style>
+             :host {
+                display: block
+            }
+
+            #cardsSlot {
+                float: left;
+                width: 35%;
+                margin-right: 5%;
+            }
+
+            #cardsSlot h2 {
+                font-weight: normal;
+                margin: 15px 0 0 0;
+                clear: both;
+            }
+
+            #btnCreate {
+                float: right;
+                display: block;
+                margin-top: -20px;
+            }
+
+            .cardLayout {
+                width: 100%;
+                background: #fff;
+                margin-top: 25px;
+                /* padding: 15px; */
+                float: left;
+                box-sizing: border-box;
+                cursor: pointer;
+            }
+
+            .cardLayout:hover {
+                box-shadow: 0 0 10px 0px #6b6b6a
+            }
+
+            .cardHeader {
+                background: #f60;
+                font-size: 18px;
+                padding: 10px;
+                color: #eee;
+                border: 1px solid #f60;
+            }
+
+            .addNew .cardHeader {
+                background: #bbb;
+                font-size: 18px;
+                padding: 10px;
+                color: #eee;
+                border: 1px solid #bbb;
+            }
+
+            .cardBody {
+                border: 1px solid #ccc;
+                border-top: 0;
+                /* border-bottom: 0; */
+                padding: 25px;
+                /* height: 50px; */
+                box-sizing: border-box;
+            }
+
+            .cardFooter {
+                border: 1px solid #ccc;
+                border-top-color: #eee;
+                line-height: 25px;
+                padding: 5px 25px;
+                text-align: right;
+            }
+        </style>
+        <div id="cardsSlot">
+            <h2>My Accounts</h2>
+            <a href="#" id="btnCreate">Create New</a>
+            <div id="accountCard1" class="cardLayout">
+                <div class="cardHeader">
+                    <span class="accountNumber">1234 5678 9012 3456</span>
+                </div>
+                <div class="cardBody">
+                    <span class="accountType">Savings Account</span>
+                    <span class="balanceAmount">&euro; 45,677.78</span>
+                </div>
+            </div>
+
+            <div id="accountCard2" class="cardLayout">
+                <div class="cardHeader">5678 9012 3456 1234</div>
+                <div class="cardBody">
+                    <span class="accountType">Current Account</span>
+                    <span class="balanceAmount">-&euro; 65,567.78</span>
+                </div>
+            </div>
+            <br/>
+            <h2>Other Accounts</h2>
+        </div>
+
+    </template>
+
+    <script>
+        class IngAccountElement extends Polymer.Element {
+
+            static get is() { return 'ing-account-element'; }
+
+            static get properties() {
+                return {
+
+                };
+            }
+
+            constructor() {
+                super();
+            }
+
+            ready() {
+                super.ready();
+
+                // Polymer.RenderStatus.afterNextRender(this, function() {
+
+                // });
+            }
+
+        }
+
+        window.customElements.define(IngAccountElement.is, IngAccountElement);
+    </script>
+</dom-module>
