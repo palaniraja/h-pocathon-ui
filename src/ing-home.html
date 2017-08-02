@@ -8,6 +8,9 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
+
+
 <link rel="import" href="shop-button.html">
 <link rel="import" href="shop-image.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
@@ -33,7 +36,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 
-<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
+
 <!-- Intl polyfill -->
     <script src="../bower_components/intl/dist/Intl.min.js"></script>
     <script src="../bower_components/intl/locale-data/jsonp/en.js"></script>
@@ -153,7 +156,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </dom-repeat> -->
 
      
-     <div>{{localize('pempty', 'empty', 'empty')}}</div>
+     
 
     <app-localstorage-document key="ing-ac-data" data="{{acData}}"></app-localstorage-document>
         <div id="loginCard" class="card">
@@ -161,8 +164,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <h1 id="loginHeading">Login</h1>
                 <form action="http://httpbin.org/post" method="post">
                     <!-- <paper-input label="First Name" name="firstname" id="firstname" auto-validate pattern="[a-zA-Z]*" required error-message="{{localize('hello', 'sname', 'superman', 'name', 'kent clark')}}"></paper-input> -->
-                    <paper-input name="username" placeholder="username" ></paper-input>
-                    <paper-input name="password" placeholder="password" type="password" ></paper-input>
+                    <paper-input name="username" placeholder="{{localize('username')}}" ></paper-input>
+                    <paper-input name="password" placeholder={{localize('password')}} type="password" ></paper-input>
                     <paper-button on-tap="_submit" raised>Login</paper-button>
                     <!-- <button on-click="_submit">Submit</button> -->
                 </form>
@@ -199,13 +202,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   value: function() {
                     return {
                        'en': { 
-                              'uempty': 'username should not be {empty}',
-                              'pempty': 'password should not be {empty}' 
+                              'username': 'E_Username',
+                              'password': 'P_Password' ,
+                              'hello': 'My name is {name} {sname}.' 
 
                             },
                         'fr': { 
-                              'uempty': 'FR_Nom d utilisateur should not be {empty}',
-                              'pempty': 'FR_mot de passeshould not be {empty}' 
+                              'username': 'Nom d utilisateur',
+                              'password': 'mot de passe',
+                              'hello': 'FR_My name is {name} {sname}.' 
                             }
                     };
                   }

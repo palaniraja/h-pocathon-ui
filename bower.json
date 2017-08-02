@@ -27,7 +27,9 @@
     "paper-radio-group": "^2.0.0",
     "paper-radio-button": "^2.0.0",
     "paper-button": "^2.0.0",
-    "paper-item": "PolymerElements/paper-item#^2.0.0"
+    "paper-item": "PolymerElements/paper-item#^2.0.0",
+    "intl": "^1.2.5",
+    "app-localize-behavior": "^2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "^6.0.0"
