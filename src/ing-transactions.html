@@ -15,10 +15,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shop-common-styles.html">
 <link rel="import" href="shop-image.html">
 <link rel="import" href="shop-select.html">
-<dom-module id="ing-dashboard">
+
+
+
+<link rel="import" href="shop-cart-item.html">
+
+
+<dom-module id="ing-transactions">
     <template>
-        
-        <style include="shop-common-styles shop-button shop-form-styles shop-input shop-select shop-checkbox">
+        <style include="shop-common-styles shop-button shop-form-styles">
+        .list {
+            margin: 40px 0;
+        }
+
+        .checkout-box {
+            font-weight: bold;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .subtotal {
+            margin: 0 64px 0 24px;
+        }
+
+        @media (max-width: 767px) {
+
+            .subtotal {
+                margin: 0 0 0 24px;
+            }
+        }
         </style>
         <!--
       app-route provides the name of the category and the item.
@@ -28,28 +53,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       shop-category-data provides the item data for a given category and item name.
     -->
         <ing-category-data id="categoryData" category-name="[[routeData.category]]" item-name="[[routeData.item]]" item="{{item}}" failure="{{failure}}"></ing-category-data>
-
-
-        <!-- <div id="dashboardCard" class="card"> -->
-        <div id="dashboardCard" class="card">
-            <h1 id="dashboardHeading">Dashboard123</h1>
-            <div class="circle">1</div>
+        <div id="transactionCard" class="card">
+            <h1 id="dashboardHeading">Transactions</h1>
+            <div class="circle">2</div>
+            <div class="list">
+                <dom-repeat items="[[cart]]" as="entry">
+                    <template>
+                        <shop-cart-item entry="[[entry]]"></shop-cart-item>
+                    </template>
+                </dom-repeat>
+            </div>
         </div>
-
-
-        <!--
-      shop-network-warning shows a warning message when the items can't be rendered due
-      to network conditions.
-    -->
-        <!-- <shop-network-warning
-        hidden$="[[!failure]]"
-        offline="[[offline]]"
-        on-try-reconnect="_tryReconnect"></shop-network-warning> -->
     </template>
     <script>
-    class IngDashboard extends Polymer.Element {
+    class IngTransactions extends Polymer.Element {
 
-        static get is() { return 'ing-dashboard'; }
+        static get is() { return 'ing-transactions'; }
 
         static get properties() {
             return {
@@ -70,7 +89,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     observer: '_offlineChanged'
                 },
 
-                failure: Boolean
+                failure: Boolean,
+
+                cart: [{"item":{"name":"Ladies+Sonoma+Hybrid+Knit+Jacket","title":"Ladies Sonoma Hybrid Knit Jacket","category":"ladies_outerwear","price":84.85,"description":"A modern styled sport jacket that combines a classic silhouette with moisture-wicking fabrics. Technical features include a reversed coil zipper with reflective stripe, interior media exit port, and built-in media pocket.&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Additional Features:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;94% polyester, 6% spandex.&lt;/li&gt;&lt;li&gt;Available in black with the white Google logo heat transferred onto right hip along zipper.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;","image":"/data/images/10-24097B.jpg","largeImage":"/data/images/10-24097A.jpg"},"quantity":1,"size":"M"},{"item":{"name":"Inbox+-+Subtle+Actions+T-Shirt","title":"Inbox - Subtle Actions T-Shirt","category":"mens_tshirts","price":17.05,"description":"Sometimes even the subtlest of actions can make a big difference. This tee highlights all of the icons &amp;amp; features available in your Gmail inbox!&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Features:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;60% cotton, 40% polyester blend.&lt;/li&gt;&lt;li&gt;Available in charcoal heather with the inbox icons screenprinted at front chest and inbox tag sewn onto left sleeve.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;","image":"/data/images/10-13256B.jpg","largeImage":"/data/images/10-13256A.jpg"},"quantity":1,"size":"M"}]
 
             }
         }
@@ -145,6 +166,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     }
 
-    customElements.define(IngDashboard.is, IngDashboard);
+    customElements.define(IngTransactions.is, IngTransactions);
     </script>
 </dom-module>
