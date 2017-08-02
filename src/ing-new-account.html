@@ -1,0 +1,196 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
+
+<!--
+`<ing-register>` is Description
+
+@element ing-register
+-->
+<dom-module id="ing-register-element">
+    <template>
+        <style>
+             :host {
+                display: block
+            }
+
+            #newAcSlot {
+                float: left;
+                width: 60%;
+                border-left: 1px solid #ccc;
+                padding-left: 5%;
+                box-sizing: border-box;
+            }
+
+            #newAcTitle {
+                border-bottom: 1px solid #f60;
+            }
+
+            #newAcTitle h1 {
+                font-size: 25px;
+                font-weight: normal;
+                color: #f60;
+                padding-bottom: 0;
+                margin-bottom: 0;
+                display: inline-block;
+                padding-right: 20px;
+            }
+
+            .formSection {
+                border: 1px solid #ccc;
+                padding: 15px;
+                margin-top: 20px;
+                background: #fdfdfd;
+            }
+
+            .formSection h3 {
+                margin: 0;
+            }
+        </style>
+        <div id="newAcSlot">
+            <div id="newAcTitle">
+                <div id="titleHolder">
+                    <h1>For </h1>
+                    <paper-dropdown-menu selected="1" name="dependents">
+                        <paper-listbox class="dropdown-content" slot="dropdown-content" selected="0">
+                            <paper-item name="jackSparrow" value="Jack Sparrow">Me (Jack Sparrow)</paper-item>
+                            <paper-item name="willSparrow" value="Will Sparrow">Will Sparrow</paper-item>
+                            <paper-item name="elizabethSparrow" value="Elizabeth Sparrow">Elizabeth Sparrow</paper-item>
+                            <paper-item name="new" value="New">Add New Person</paper-item>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+                </div>
+                <div id="serviceHolder">
+                    <h1>Products </h1>
+                    <paper-dropdown-menu name="service">
+                        <paper-listbox class="dropdown-content" slot="dropdown-content" selected="1">
+                            <paper-item value="CA">Current Account</paper-item>
+                            <paper-item value="SA">Savings Account</paper-item>
+                            <paper-item value="OB">On-boarding</paper-item>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+                </div>
+            </div>
+            <div id="newAcBody">
+                <iron-form id="newAccountForm">
+                    <form action="" method="POST">
+                        <div id="personalDetails" class="formSection">
+                            <h3>Personal Info</h3>
+                            <paper-dropdown-menu label="Title" name="title">
+                                <paper-listbox class="dropdown-content" slot="dropdown-content">
+                                    <paper-item value="Mr">Mr</paper-item>
+                                    <paper-item value="Ms">Ms</paper-item>
+                                </paper-listbox>
+                            </paper-dropdown-menu>
+                            <paper-input type="text" name="fName" required auto-validate error-message="First Name Required" label="First Name"></paper-input>
+                            <paper-input type="text" name="lName" required auto-validate label="Last Name"></paper-input>
+                            <paper-input type="text" name="sName" required auto-validate label="Short Name"></paper-input>
+                            <paper-input type="date" name="dob" required auto-validate label="Date of Birth"></paper-input>
+                            <paper-input name="mobile" required label="Mobile Number" auto-validate pattern="[0-9]*" error-message="Mobile Number Required!"
+                                type="string" maxlength="10"></paper-input>
+                            <paper-input type="number" name="nationalID" required auto-validate label="National ID"></paper-input>
+                        </div>
+
+                        <!-- Address part will be added later -->
+                        <!-- <div id="addressDetails" class="formSection">
+                            <h3>Address </h3>
+                            <paper-input type="text" name="line1" required auto-validate label="Address Line 1"></paper-input>
+                            <paper-input type="text" name="line2" label="Address Line 2"></paper-input>
+                            <paper-input type="text" name="city" required auto-validate label="City"></paper-input>
+                            <paper-input type="text" name="country" required auto-validate label="Country"></paper-input>
+                            <paper-input type="text" name="postalCode" required auto-validate label="Postal Code"></paper-input>
+                        </div> -->
+                        <div id="loginDetails" class="formSection">
+                            <h3>Login Credentials</h3>
+                            <paper-input type="text" name="userName" required auto-validate label="User Name"></paper-input>
+                            <paper-input type="password" name="password" required auto-validate label="Password"></paper-input>
+                            <paper-input type="password" name="rPassword" required auto-validate label="Password Again"></paper-input>
+                            <paper-input type="file" name="supportDoc" label="Support Document"></paper-input>
+                            <paper-input type="flie" name="personalCard" label="Personalize your bank card"></paper-input>
+                        </div>
+                        <br/>
+                        <paper-button id="addAccount" on-click="formSubmit" raised>Submit</paper-button>
+                    </form>
+                    <br>
+                </iron-form>
+            </div>
+        </div>
+        <iron-ajax id="requestRegistration" method="post" content-type="application/json" url="http://10.138.65.174:8486/smart/bank/customer/registration"
+            body='[[formData]]' on-response="handleResponse" handle-as="json" debounce-duration="300"></iron-ajax>
+
+
+    </template>
+
+    <script>
+        class IngRegisterElement extends Polymer.Element {
+
+            static get is() { return 'ing-register-element'; }
+
+            static get properties() {
+                return {
+
+                };
+                formData: {
+                    type: String,
+                        value = ''
+                }
+            }
+
+            constructor() {
+                super();
+            }
+            formSubmit() {
+                var data = this.$.newAccountForm.serializeForm();
+                this.formData = JSON.stringify({
+                    "customerLoginId": data.userName,
+                    "loginPassword": data.password,
+                    "firstName": data.fName,
+                    "lastName": data.lName,
+                    "emailId": data.email,
+                    "mobileNumber": data.mobile,
+                    "nationalId": data.nationalID,
+                    "title": data.title,
+                    "address": [
+                        {
+                            "addressType": "Home",
+                            "addressLine1": data.line1,
+                            "addressLine2": data.line2,
+                            "city": data.city,
+                            "country": data.country,
+                            "postCode": data.postalCode
+                        }
+                    ],
+                    "accounts": [
+                        {
+                            "accountType": data.accountType
+                        }
+                    ]
+                });
+                console.log(this.$.requestRegistration);
+                this.$.requestRegistration.generateRequest();
+            }
+            handleResponse(data) {
+                // console.log(data.detail.response);
+                this.accDetails = data.detail.response;
+                console.log(this.accDetails);
+            }
+
+
+            ready() {
+                super.ready();
+
+                // Polymer.RenderStatus.afterNextRender(this, function () {
+
+                // });
+            }
+
+        }
+
+        window.customElements.define(IngRegisterElement.is, IngRegisterElement);
+    </script>
+</dom-module>

@@ -1,25 +1,35 @@
 {
-  "name": "SHOP",
-  "short_name": "SHOP",
-  "icons": [{
-      "src": "images/shop-icon-128.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    }, {
-      "src": "images/shop-icon-192.png",
+  "name": "ING Bank",
+  "short_name": "ING Bank",
+  "icons": [
+    {
+      "src": "images/ing-logo-48.gif",
+      "sizes": "48x48",
+      "type": "image/gif"
+    },
+    {
+      "src": "images/ing-logo-72.gif",
+      "sizes": "72x72",
+      "type": "image/gif"
+    },
+    {
+      "src": "images/ing-logo-96.gif",
+      "sizes": "96x96",
+      "type": "image/gif"
+    },
+    {
+      "src": "images/ing-logo-144.gif",
+      "sizes": "144x144",
+      "type": "image/gif"
+    },
+    {
+      "src": "images/ing-logo-192.gif",
       "sizes": "192x192",
-      "type": "image/png"
-    },{
-      "src": "images/shop-icon-384.png",
-      "sizes": "384x384",
-      "type": "image/png"
-    },{
-      "src": "images/shop-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }],
+      "type": "image/gif"
+    }
+  ],
   "start_url": "/",
-  "background_color": "#fff",
+  "background_color": "#f60",
   "display": "standalone",
-  "theme_color": "#fff"
+  "theme_color": "#f60"
 }

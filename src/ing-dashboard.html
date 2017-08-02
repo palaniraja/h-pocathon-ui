@@ -15,14 +15,76 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shop-common-styles.html">
 <link rel="import" href="shop-image.html">
 <link rel="import" href="shop-select.html">
-<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
-
+<link rel="import" href="ing-account-card.html">
+<link rel="import" href="ing-new-account.html">
 <dom-module id="ing-dashboard">
     <template>
 
-    <app-localstorage-document key="ing-ac-data" id="dashboardData" data={{acData}} ></app-localstorage-document>
-        
         <style include="shop-common-styles shop-button shop-form-styles shop-input shop-select shop-checkbox">
+            #ingDashboard {
+                margin: 0 auto;
+                background: #efefef;
+            }
+
+            #ingDashboard header {
+                background: #fff;
+                border-bottom: 1px solid #ccc;
+                box-shadow: 0 0 10px 2px #999;
+            }
+
+            #ingDashboard footer {
+                border-top: 1px solid #ccc;
+            }
+
+            #ingHeader,
+            #ingSection,
+            #ingFooter {
+                width: 85%;
+                margin: 0 auto;
+            }
+
+            #ingHeader {
+                height: 75px;
+                background-image: url('assets/logo-ing.png');
+                background-repeat: no-repeat;
+                background-position: left center;
+                background-size: 125px;
+            }
+
+            #ingHeader p {
+                font-size: 16px;
+                float: right;
+                line-height: 25px;
+                margin: 25px 0;
+            }
+
+            #ingHeader p span {
+                font-weight: 700;
+            }
+
+            #ingHeader p a {
+                font-size: 13px;
+                text-decoration: none;
+                color: #f60;
+                margin-left: 15px;
+            }
+
+            #ingSection {
+                min-width: 768px;
+                min-height: 500px;
+                padding: 15px;
+            }
+
+            footer {
+                clear: both;
+            }
+
+            #ingFooter {
+                height: 50px;
+                padding: 25px;
+                text-align: center;
+                /* background: #fff; */
+            }
         </style>
         <!--
       app-route provides the name of the category and the item.
@@ -31,23 +93,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!--
       shop-category-data provides the item data for a given category and item name.
     -->
-        <ing-category-data id="categoryData" category-name="[[routeData.category]]" item-name="[[routeData.item]]" item="{{item}}" failure="{{failure}}"></ing-category-data>
+        <ing-category-data id="categoryData" category-name="[[routeData.category]]" item-name="[[routeData.item]]" item="{{item}}"
+            failure="{{failure}}"></ing-category-data>
 
-
-        <!-- <div id="dashboardCard" class="card"> -->
-
-
-    <template is="dom-repeat" items="{{acData.accountsummary}}">
-        <div id="dashboardCard" class="card">
-            <h1 id="dashboardHeading">{{item.accountype}}</h1>
-            <div class="circle">[[index]]</div>
+        <div id="ingDashboard">
+            <header>
+                <div id="ingHeader">
+                    <!-- <img src="src/ing-app/assets/logo-ing-mono.png" alt="ING"> -->
+                    <p>Welcome <span>[[user]]Jack Sparrow</span> <a href="logout">Logout</a></p>
+                </div>
+            </header>
+            <section>
+                <div id="ingSection">
+                    <ing-account-element></ing-account-element>
+                    <ing-register-element></ing-register-element>
+                </div>
+            </section>
+            <footer>
+                <div id="ingFooter">&copy; 2017 - ING Bank</div>
+            </footer>
         </div>
-    </template>
-        
-
-        
-
-
         <!--
       shop-network-warning shows a warning message when the items can't be rendered due
       to network conditions.
@@ -58,123 +123,104 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         on-try-reconnect="_tryReconnect"></shop-network-warning> -->
     </template>
     <script>
-    class IngDashboard extends Polymer.mixinBehaviors([Polymer.AppStorageBehavior], Polymer.Element) {
+        class IngDashboard extends Polymer.Element {
 
-        static get is() { return 'ing-dashboard'; }
+            static get is() { return 'ing-dashboard'; }
 
-        static get properties() {
-            return {
+            static get properties() {
+                return {
 
-                item: Object,
+                    item: Object,
 
-                route: Object,
+                    route: Object,
 
-                routeData: Object,
+                    routeData: Object,
 
-                visible: {
-                    type: Boolean,
-                    value: false
-                },
+                    visible: {
+                        type: Boolean,
+                        value: false
+                    },
 
-                offline: {
-                    type: Boolean,
-                    observer: '_offlineChanged'
-                },
+                    offline: {
+                        type: Boolean,
+                        observer: '_offlineChanged'
+                    },
 
-                failure: Boolean,
+                    failure: Boolean
 
-                acData: Object
-
+                }
             }
+
+            static get observers() {
+                return [
+                    '_itemChanged(item, visible)'
+                ]
+            }
+
+            _itemChanged(item, visible) {
+                if (visible) {
+                    this._itemChangeDebouncer = Polymer.Debouncer.debounce(this._itemChangeDebouncer,
+                        Polymer.Async.microTask, () => {
+                            // The item description contains escaped HTML (e.g. "&lt;br&gt;"), so we need to
+                            // unescape it ("<br>") and set it as innerHTML.
+                            let text = item ? item.description : '';
+                            this.$.desc.innerHTML = this._unescapeText(text);
+
+                            // Reset the select menus.
+                            this.$.quantitySelect.value = '1';
+                            this.$.sizeSelect.value = 'M';
+
+                            this.dispatchEvent(new CustomEvent('change-section', {
+                                bubbles: true,
+                                composed: true,
+                                detail: {
+                                    category: item ? item.category : '',
+                                    title: item ? item.title : ''
+                                }
+                            }));
+                        })
+                }
+            }
+
+            _unescapeText(text) {
+                let elem = document.createElement('textarea');
+                elem.innerHTML = text;
+                return elem.textContent;
+            }
+
+            _formatPrice(price) {
+                return price ? '$' + price.toFixed(2) : '';
+            }
+
+            _addToCart() {
+                // This event will be handled by shop-app.
+                this.dispatchEvent(new CustomEvent('add-cart-item', {
+                    bubbles: true,
+                    composed: true,
+                    detail: {
+                        item: this.item,
+                        quantity: parseInt(this.$.quantitySelect.value, 10),
+                        size: this.$.sizeSelect.value
+                    }
+                }));
+            }
+
+            _isDefined(item) {
+                return item != null;
+            }
+
+            _tryReconnect() {
+                this.$.categoryData.refresh();
+            }
+
+            _offlineChanged(offline) {
+                if (!offline) {
+                    this._tryReconnect();
+                }
+            }
+
         }
 
-        // static get observers() {
-        //     return [
-        //         '_itemChanged(item, visible)'
-        //     ]
-        // }
-
-
-        ready(){
-            super.ready();
-
-            
-
-            console.log(this.$.dashboardData);
-
-            this.acData  = window.localStorage.getItem('ing-ac-data'); //couldn't get the value out of app-storage promise. hence dirty trick
-
-            // console.log(s);
-
-            
-            // console.log('ready');
-            // console.log(this.acData);
-        }
-
-        // _itemChanged(item, visible) {
-        //     if (visible) {
-        //         this._itemChangeDebouncer = Polymer.Debouncer.debounce(this._itemChangeDebouncer,
-        //             Polymer.Async.microTask, () => {
-        //                 // The item description contains escaped HTML (e.g. "&lt;br&gt;"), so we need to
-        //                 // unescape it ("<br>") and set it as innerHTML.
-        //                 let text = item ? item.description : '';
-        //                 this.$.desc.innerHTML = this._unescapeText(text);
-
-        //                 // Reset the select menus.
-        //                 this.$.quantitySelect.value = '1';
-        //                 this.$.sizeSelect.value = 'M';
-
-        //                 this.dispatchEvent(new CustomEvent('change-section', {
-        //                     bubbles: true,
-        //                     composed: true,
-        //                     detail: {
-        //                         category: item ? item.category : '',
-        //                         title: item ? item.title : ''
-        //                     }
-        //                 }));
-        //             })
-        //     }
-        // }
-
-        // _unescapeText(text) {
-        //     let elem = document.createElement('textarea');
-        //     elem.innerHTML = text;
-        //     return elem.textContent;
-        // }
-
-        // _formatPrice(price) {
-        //     return price ? '$' + price.toFixed(2) : '';
-        // }
-
-        // _addToCart() {
-        //     // This event will be handled by shop-app.
-        //     this.dispatchEvent(new CustomEvent('add-cart-item', {
-        //         bubbles: true,
-        //         composed: true,
-        //         detail: {
-        //             item: this.item,
-        //             quantity: parseInt(this.$.quantitySelect.value, 10),
-        //             size: this.$.sizeSelect.value
-        //         }
-        //     }));
-        // }
-
-        // _isDefined(item) {
-        //     return item != null;
-        // }
-
-        // _tryReconnect() {
-        //     this.$.categoryData.refresh();
-        // }
-
-        // _offlineChanged(offline) {
-        //     if (!offline) {
-        //         this._tryReconnect();
-        //     }
-        // }
-
-    }
-
-    customElements.define(IngDashboard.is, IngDashboard);
+        customElements.define(IngDashboard.is, IngDashboard);
     </script>
 </dom-module>
