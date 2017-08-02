@@ -1,9 +1,49 @@
 {
-    "accounts":[
+    "status": "success",
+    "jwt": "",
+    "accountsummary": [
+    {
+        "accountype": "current",
+        "accounno": "12345",
+        "balance": "23",
+        "currcode": "EUR",
+        "transcations": [
         {
-            "id":1234,
-            "balance": 3000
-            "type": "adult"
-        }
-    ]
+            "transactiontype": "POS",
+            "transactionshortform": "STARBUCKS",
+            "transactiondetail": "STARBUCKS SALE",
+            "transaction date": "2017-07-30",
+            "transactionamt": "10.30",
+            "isdebit": "YES"
+        },
+        {
+            "transactiontype": "DD",
+            "transactionshortform": "WATERNET",
+            "transactiondetail": "WATERNET AUG",
+            "transaction date": "2017-07-30",
+            "transactionamt": "50.30",
+            "isdebit": "YES"
+        },
+        {
+            "transactiontype": "SAL",
+            "transactionshortform": "SALARY",
+            "transactiondetail": "SALARY AUG",
+            "transaction date": "2017-07-30",
+            "transactionamt": "5000.30",
+            "isdebit": "NO"
+        }]
+    },
+    {
+        "accountype": "savings",
+        "accounno": "123456",
+        "balance": "233",
+        "currcode": "EUR"
+    },
+    {
+        "accountype": "child",
+        "accounno": "123457",
+        "balance": "235",
+        "currcode": "EUR"
+    }]
+
 }

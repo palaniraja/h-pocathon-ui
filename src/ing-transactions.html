@@ -18,7 +18,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-<!-- <link rel="import" href="shop-cart-item.html"> -->
 <link rel="import" href="ing-transaction-item.html">
 
 
@@ -92,7 +91,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 failure: Boolean,
 
-                cart: [{"item":{"name":"Ladies+Sonoma+Hybrid+Knit+Jacket","title":"Ladies Sonoma Hybrid Knit Jacket","category":"ladies_outerwear","price":84.85,"description":"A modern styled sport jacket that combines a classic silhouette with moisture-wicking fabrics. Technical features include a reversed coil zipper with reflective stripe, interior media exit port, and built-in media pocket.&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Additional Features:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;94% polyester, 6% spandex.&lt;/li&gt;&lt;li&gt;Available in black with the white Google logo heat transferred onto right hip along zipper.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;","image":"/data/images/10-24097B.jpg","largeImage":"/data/images/10-24097A.jpg"},"quantity":1,"size":"M"},{"item":{"name":"Inbox+-+Subtle+Actions+T-Shirt","title":"Inbox - Subtle Actions T-Shirt","category":"mens_tshirts","price":17.05,"description":"Sometimes even the subtlest of actions can make a big difference. This tee highlights all of the icons &amp;amp; features available in your Gmail inbox!&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Features:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;60% cotton, 40% polyester blend.&lt;/li&gt;&lt;li&gt;Available in charcoal heather with the inbox icons screenprinted at front chest and inbox tag sewn onto left sleeve.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;","image":"/data/images/10-13256B.jpg","largeImage":"/data/images/10-13256A.jpg"},"quantity":1,"size":"M"}]
+                cart: Object
 
             }
         }
@@ -103,7 +102,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ]
         }
 
+
+        constructor(props) {
+          super(props);
+        
+          console.log('ing-trasnsaction constructor');
+          console.dir(this.cart);
+        }
+
+
+        ready() {
+            super.ready();
+             console.log('ing-trasnsaction ready');
+          console.dir(this);
+
+          this.cart = [
+  {
+    "item": {
+      "date": "24-Mar-2017",
+      "detail": "POS Dominos",
+      "amount": 84.85,
+    },
+  },
+  {
+    "item": {
+      "date": "28-Mar-2017",
+      "detail": "POS Lidl",
+      "amount": 23.19,
+    },
+  }
+];
+          }
+
         _itemChanged(item, visible) {
+            console.log('item-changed');
             if (visible) {
                 this._itemChangeDebouncer = Polymer.Debouncer.debounce(this._itemChangeDebouncer,
                     Polymer.Async.microTask, () => {
